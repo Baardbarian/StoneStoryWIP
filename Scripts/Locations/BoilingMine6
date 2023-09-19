@@ -1,0 +1,79 @@
+
+// Status shit to write things out at the bottom of my phone screen
+>`1,21,distance:@foe.distance@
+>`1,22,state:@foe.state@
+>`1,25,time:@foe.time@
+>`1,25,armor:@foe.armor@
+>`1,25,name:@foe.name@
+
+// Learning to script this crap, took 5* down to under 1m
+// healing when attacked vigor hammer and shield seems awesome to keep you alive everywhere
+// change + on items or star levels to your own setups
+?loc = boiling
+
+  // Things for the bossfight, no use with hammer at 5*
+  // Remove fire talisman if you don't have it
+	?foe = Bronze Guardian
+		?foe.state = 32 & foe.time = 32
+			equip Mind
+		:?foe.armor >= 1000 &
+                ^foe.distance <= 21 &
+		^item.GetCooldown("hammer") <= 0 |
+                ^item.GetCooldown("hammer") >= 647
+			equip Heavy Hammer
+			?item.CanActivate("hammer")
+				activate R
+		:?summon.count = 0
+			equipL Fire Talisman
+			equipR Vigor Shield
+			?item.CanActivate("fire_talisman")
+				activate L
+		:?foe.state = 33
+			?foe.distance > 20
+				equipL Star Stone
+				equipR Triskelion
+			:
+				equipL Aether Wand +7
+				equipR Aether Wand +6
+		:
+			equipL Aether Wand +7
+			equipR Aether Wand +6
+		?foe.debuffs.count = 10 &
+		^foe.armor <= 0
+			activate cinderwisp
+
+  // Code for the regular mobs, not using next.screen blade yet
+  // Change hp < X to what you need for the offline to not die, my max is 38 atm
+	:?foe.distance <= 20
+		?item.GetCooldown("dash") <= 0 &
+		^foe.distance <= 16 &
+		^foe.distance > 10
+                        equipL Vigor Hammer dh
+			equipR dash
+		:?hp < 35 & foe ! Bomb Cart
+			?foe.count <= 2 & foe ! Fire Element
+				equipL Vigor Sword *9
+				equipR Vigor Sword *10
+			:
+				equipL Vigor Hammer dh
+				equipR Vigor Shield ah
+		:?item.GetCooldown("blade") <= 0 &
+		^foe.distance <= 15 &
+		^foe.count >= 4
+		  equip Blade
+		  ?item.CanActivate("blade")
+			activate R
+		:?foe.distance <= 16
+			equipL Aether Wand +7
+			equipR Aether Wand +6
+
+		?foe = Bomb Cart &
+		^foe.distance <= 6
+			equip Mind
+	:
+		equipL Star Stone
+		equipR Triskelion
+
+// Testing with further star levels 6*+, foe count seems to work better at 6+, might have to use screen trick
+// And get bashing shield and quarterstaff
+// Hammer also not working, need to be fixed
