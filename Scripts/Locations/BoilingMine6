@@ -2,9 +2,11 @@
 // Status shit to write things out at the bottom of my phone screen
 >`1,21,distance:@foe.distance@
 >`1,22,state:@foe.state@
->`1,25,time:@foe.time@
->`1,25,armor:@foe.armor@
+>`1,23,time:@foe.time@
+>`1,24,armor:@foe.armor@
 >`1,25,name:@foe.name@
+
+var count_screen = 0
 
 // vigor hammer+shield keeps you alive
 ?loc = boiling
@@ -14,9 +16,9 @@
 		?foe.state = 32 & foe.time = 32
 			equip Mind
 		:?foe.armor >= 1000 &
-                ^foe.distance <= 21 &
+		^foe.distance <= 21 &
 		^item.GetCooldown("hammer") <= 0 |
-                ^item.GetCooldown("hammer") >= 647
+		^item.GetCooldown("hammer") >= 647
 			equip Heavy Hammer
 			?item.CanActivate("hammer")
 				activate R
@@ -40,11 +42,10 @@
 			activate cinderwisp
 
   // mookfights, change hp to your pref
-	:?foe.distance <= 20
+	:?foe.distance <= 16
 		?item.GetCooldown("dash") <= 0 &
-		^foe.distance <= 16 &
 		^foe.distance > 10
-                        equipL Vigor Hammer dh
+			equipL Vigor Hammer dh
 			equipR dash
 		:?hp < 35 & foe ! Bomb Cart
 			?foe.count <= 2 & foe ! Fire Element
@@ -54,18 +55,27 @@
 				equipL Vigor Hammer dh
 				equipR Vigor Shield ah
 		:?item.GetCooldown("blade") <= 0 &
-		^foe.distance <= 15 &
-		^foe.count >= 6
-		  equip Blade
-		  ?item.CanActivate("blade")
-			activate R
-		:?foe.distance <= 16
+		^foe.count >= 5
+			screen.next()
+			count_screen++
+			?count_screen = 5
+				equip Blade
+				?item.CanActivate("blade")
+					activate R
+					screen.ResetOffset()
+					count_screen = 0
+		?foe = Bomb Cart &
+		^foe.distance <= 7
+			equip Mind
+		:
 			equipL Aether Wand +7
 			equipR Aether Wand +6
 
-		?foe = Bomb Cart &
-		^foe.distance <= 6
-			equip Mind
+	:?summon.count = 0
+		equipL Fire Talisman
+		equipR Triskelion
+  	?item.CanActivate("fire_talisman")
+    	activate L
 	:
 		equipL Star Stone
 		equipR Triskelion
