@@ -47,13 +47,6 @@ var count_screen = 0
 		^foe.distance > 10
 			equipL Vigor Hammer dh
 			equipR dash
-		:?hp < 35 & foe ! Bomb Cart
-			?foe.count <= 2 & foe ! Fire Element
-				equipL Vigor Sword *9
-				equipR Vigor Sword *10
-			:
-				equipL Vigor Hammer dh
-				equipR Vigor Shield ah
 		:?item.GetCooldown("blade") <= 0 &
 		^foe.count >= 5
 			screen.next()
@@ -64,7 +57,14 @@ var count_screen = 0
 					activate R
 					screen.ResetOffset()
 					count_screen = 0
-		?foe = Bomb Cart &
+		:?hp < 30 & foe ! Bomb Cart
+			?foe.count <= 2 & foe ! Fire Element
+				equipL Vigor Sword *9
+				equipR Vigor Sword *10
+			:
+				equipL Vigor Hammer dh
+				equipR Vigor Shield ah
+		?:foe = Bomb Cart &
 		^foe.distance <= 7
 			equip Mind
 		:
