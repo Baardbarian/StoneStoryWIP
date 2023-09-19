@@ -55,7 +55,7 @@
 				equipR Vigor Shield ah
 		:?item.GetCooldown("blade") <= 0 &
 		^foe.distance <= 15 &
-		^foe.count >= 5
+		^foe.count >= 4
 		  equip Blade
 		  ?item.CanActivate("blade")
 			activate R
@@ -70,8 +70,6 @@
 		equipL Star Stone
 		equipR Triskelion
 
-
-
-
-
-
+// Testing with further star levels 6*+, foe count seems to work better at 6+, might have to use screen trick
+// And get bashing shield and quarterstaff
+// Hammer also not working, need to be fixed
