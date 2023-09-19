@@ -44,34 +44,31 @@ var count_screen = 0
 			activate cinderwisp
 
   // mookfights, change hp to your pref
-	:?foe.distance <= 16
+	:?foe.distance <= 20
 		?item.GetCooldown("dash") <= 0 &
+		^foe.distance <= 16 &
 		^foe.distance > 10
-			equipL Vigor Hammer dh
-			equipR dash
-		:?item.GetCooldown("blade") <= 0 &
-		^foe.count >= 5
-			screen.next()
-			count_screen++
-			?count_screen = 5
-				equip Blade
-				?item.CanActivate("blade")
-					activate R
-					screen.ResetOffset()
-					count_screen = 0
-		:?hp < 30 & foe ! Bomb Cart
+			equip dash
+		:?hp < 35 & foe ! Bomb Cart
 			?foe.count <= 2 & foe ! Fire Element
 				equipL Vigor Sword *9
 				equipR Vigor Sword *10
 			:
 				equipL Vigor Hammer dh
 				equipR Vigor Shield ah
-		?:foe = Bomb Cart &
-		^foe.distance <= 7
-			equip Mind
-		:
+		:?item.GetCooldown("blade") <= 0 &
+		^foe.distance <= 15 &
+		^foe.count >= 4
+		  equip Blade
+		  ?item.CanActivate("blade")
+			activate R
+		:?foe.distance <= 16
 			equipL Aether Wand +7
 			equipR Aether Wand +6
+
+		?foe = Bomb Cart &
+		^foe.distance <= 6
+			equip Mind
 
 	:?summon.count = 0
 		equipL Fire Talisman
