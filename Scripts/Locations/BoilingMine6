@@ -6,13 +6,10 @@
 >`1,25,armor:@foe.armor@
 >`1,25,name:@foe.name@
 
-// Learning to script this crap, took 5* down to under 1m
-// healing when attacked vigor hammer and shield seems awesome to keep you alive everywhere
-// change + on items or star levels to your own setups
+// vigor hammer+shield keeps you alive
 ?loc = boiling
 
-  // Things for the bossfight, no use with hammer at 5*
-  // Remove fire talisman if you don't have it
+	// Bossfight
 	?foe = Bronze Guardian
 		?foe.state = 32 & foe.time = 32
 			equip Mind
@@ -42,8 +39,7 @@
 		^foe.armor <= 0
 			activate cinderwisp
 
-  // Code for the regular mobs, not using next.screen blade yet
-  // Change hp < X to what you need for the offline to not die, my max is 38 atm
+  // mookfights, change hp to your pref
 	:?foe.distance <= 20
 		?item.GetCooldown("dash") <= 0 &
 		^foe.distance <= 16 &
@@ -74,6 +70,3 @@
 		equipL Star Stone
 		equipR Triskelion
 
-// Testing with further star levels 6*+, foe count seems to work better at 6+, might have to use screen trick
-// And get bashing shield and quarterstaff
-// Hammer also not working, need to be fixed
