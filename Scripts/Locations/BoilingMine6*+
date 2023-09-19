@@ -1,0 +1,4 @@
+:? SE.getPlayerBuffCount("berserk") = 0 & foe.armor > 0 & foe.distance <= 21 & item.GetCooldown("hammer") <= 0 | item.GetCooldown("hammer") >= 647
+        equip heavy hammer
+        ? item.CanActivate("hammer")
+          activate R
