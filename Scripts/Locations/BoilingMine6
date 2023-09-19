@@ -1,5 +1,5 @@
 
-// Status shit to write things out at the bottom of my phone screen
+// Status bottom screen
 >`1,21,distance:@foe.distance@
 >`1,22,state:@foe.state@
 >`1,23,time:@foe.time@
