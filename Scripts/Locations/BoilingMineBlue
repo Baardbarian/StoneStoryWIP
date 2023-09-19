@@ -1,0 +1,81 @@
+>`5,5,my buffs:@buffs.string@
+>`5,6,my debuffs:@debuffs.string@
+
+// Status bottom screen
+>`1,21,distance:@foe.distance@
+>`1,22,state:@foe.state@
+>`1,23,time:@foe.time@
+>`1,24,armor:@foe.armor@
+>`1,25,name:@foe.name@
+
+var count_screen = 0
+
+// vigor hammer+shield keeps you alive
+?loc = boiling
+
+	// Bossfight
+	?foe = Bronze Guardian
+		?foe.state = 32 & foe.time = 32
+			equip Mind
+		:?foe.armor >= 1000 &
+		^foe.distance <= 21 &
+		^item.GetCooldown("hammer") <= 0 |
+		^item.GetCooldown("hammer") >= 647
+			equip Heavy Hammer
+			?item.CanActivate("hammer")
+				activate R
+		:?summon.count = 0
+			equipL Fire Talisman
+			equipR Vigor Shield
+			?item.CanActivate("fire_talisman")
+				activate L
+		:?foe.state = 33
+			?foe.distance > 20
+				equipL Star Stone
+				equipR Triskelion
+			:
+				equipL Aether Wand +7
+				equipR Aether Wand +6
+		:
+			equipL Aether Wand +7
+			equipR Aether Wand +6
+		?foe.debuffs.count = 10 &
+		^foe.armor <= 0
+			activate cinderwisp
+
+  // mookfights, change hp to your pref
+	:?foe.distance <= 20
+		?item.GetCooldown("dash") <= 0 &
+		^foe.distance <= 16 &
+		^foe.distance > 10
+			equip dash
+		:?hp < 35 & foe ! Bomb Cart
+			?foe.count <= 2 & foe ! Fire Element
+				equipL Vigor Sword *9
+				equipR Vigor Sword *10
+			:
+				equipL Vigor Hammer dh
+				equipR Vigor Shield ah
+		:?item.GetCooldown("blade") <= 0 &
+		^foe.distance <= 15 &
+		^foe.count >= 4
+		  equip Blade
+		  ?item.CanActivate("blade")
+			activate R
+		:?foe.distance <= 16
+			equipL Aether Wand +7
+			equipR Aether Wand +6
+
+		?foe = Bomb Cart &
+		^foe.distance <= 6
+			equip Mind
+
+	:?summon.count = 0
+		equipL Fire Talisman
+		equipR Triskelion
+  	?item.CanActivate("fire_talisman")
+    	activate L
+	:
+		equipL Star Stone
+		equipR Triskelion
+
