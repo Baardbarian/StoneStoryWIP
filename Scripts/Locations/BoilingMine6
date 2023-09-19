@@ -59,7 +59,7 @@
 				equipR Vigor Shield ah
 		:?item.GetCooldown("blade") <= 0 &
 		^foe.distance <= 15 &
-		^foe.count >= 4
+		^foe.count >= 6
 		  equip Blade
 		  ?item.CanActivate("blade")
 			activate R
