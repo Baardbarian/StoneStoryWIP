@@ -1,14 +1,14 @@
->`1,6,my buffs:@buffs.string@
->`1,7,my debuffs:@debuffs.string@
->`1,8,@item.left@:@item.left.state@:@item.left.time@
->`1,9,@item.right@:@item.right.state@:@item.right.time@
+>`1,6,Buffs:@buffs.string@
+>`1,7,Debuffs:@debuffs.string@
+>`1,24,@item.left.state@:Left:@item.left@
+>`1,25,@item.right.state@:Right:@item.right@
 
 // Status bottom screen
->`1,21,distance:@foe.distance@
->`1,22,state:@foe.state@
->`1,23,time:@foe.time@
->`1,24,armor:@foe.armor@
->`1,25,name:@foe.name@
+>`1,18,distance:@foe.distance@
+>`1,19,state:@foe.state@
+>`1,20,time:@foe.time@
+>`1,21,armor:@foe.armor@
+>`1,22,name:@foe.name@
 
 
 // vigor hammer+shield keeps you alive
