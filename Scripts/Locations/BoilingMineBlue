@@ -59,9 +59,7 @@ var count_screen = 0
 		:?item.GetCooldown("blade") <= 0 &
 		^foe.distance <= 15 &
 		^foe.count >= 4
-		  equip Blade
-		  ?item.CanActivate("blade")
-			activate R
+		  smite_two_screens()
 		:?foe.distance <= 16
 			equipL Aether Wand +7
 			equipR Aether Wand +6
@@ -79,3 +77,18 @@ var count_screen = 0
 		equipL Star Stone
 		equipR Triskelion
 
+
+
+func smite_two_screens()
+	var cd_ok= (item.GetCooldown("blade") <= 0)
+  ?cd_ok & foe.count >4
+    scrolling++
+    screen.Next()
+  :
+    scrolling=0
+    screen.ResetOffset()
+  ?cd_ok &
+  ^(foe.count > 7 | scrolling > 15 )
+		equip Blade
+		?item.CanActivate("blade")
+			activate R
