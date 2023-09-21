@@ -20,15 +20,13 @@ var count_screen = 0
 	  screen.Next()
 	:
 	  screen.ResetOffset()
-	?foe.distance <= 20
-	  ?screen.i >= 1 & 
-	  ^foe.count >= 6 & 
-	  ^foe.distance < 25 & 
-	  ^item.GetCooldown(＂blade＂) <= 0 | 
-	  ^item.GetCooldown(＂blade＂) >= 2387
-	    equip blade
-	    ?item.CanActivate(＂blade＂)
-	      activate R
+	?item.GetCooldown(＂blade＂) <= 0 & 
+	^screen.i >= 1 & 
+	^foe.count >= 6 |
+	^item.GetCooldown(＂blade＂) >= 2387
+		equip blade
+		?item.CanActivate(＂blade＂)
+			activate R
 	
 	// Bossfight
 	?foe = Bronze Guardian
