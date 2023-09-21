@@ -1,5 +1,7 @@
 >`1,6,my buffs:@buffs.string@
 >`1,7,my debuffs:@debuffs.string@
+>`1,8,@item.left@:@item.left.state@:@item.left.time@
+>`1,9,@item.right@:@item.right.state@:@item.right.time@
 
 // Status bottom screen
 >`1,21,distance:@foe.distance@
@@ -8,7 +10,6 @@
 >`1,24,armor:@foe.armor@
 >`1,25,name:@foe.name@
 
-var count_screen = 0
 
 // vigor hammer+shield keeps you alive
 ?loc = boiling
