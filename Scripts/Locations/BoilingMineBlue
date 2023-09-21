@@ -14,21 +14,6 @@
 // vigor hammer+shield keeps you alive
 ?loc = boiling
 	
-	// 2 SCREEN BLADE TRY
-	?foe.count >= 2 & 
-	^screen.i >= 1 & 
-	^item.GetCooldown(＂blade＂) <= 0
-	  screen.Next()
-	:
-	  screen.ResetOffset()
-	?item.GetCooldown(＂blade＂) <= 0 & 
-	^screen.i >= 1 & 
-	^foe.count >= 6 |
-	^item.GetCooldown(＂blade＂) >= 2387
-		equip blade
-		?item.CanActivate(＂blade＂)
-			activate R
-	
 	// Bossfight
 	?foe = Bronze Guardian
 		?foe.state = 32 & foe.time = 32
@@ -77,7 +62,16 @@
       activate R
 
 	:?foe.distance <= 16
-	  ?item.GetCooldown("dash") <= 0 &
+		?foe.count >= 2 &
+  	^screen.i >= 1 &
+		^item.GetCooldown("blade") <= 0 &
+			screen.next()
+			equip blade
+			?item.CanActivate("blade")
+				activate R
+				screen.ResetOffset()
+
+	  :?item.GetCooldown("dash") <= 0 &
 	  ^foe.distance > 10 &
 	  ^foe ! Bomb Cart
 	    equip dash
