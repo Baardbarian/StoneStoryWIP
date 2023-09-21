@@ -84,9 +84,9 @@
 				equipL Vigor Hammer dh
 				equipR Vigor Shield ah
 		:?foe.armor > 0
-			equipL aether sword
+			equipL Vigor Hammer dh
 			equipR Vigor Shield ah
-		:?foe.distance >= 16
+		:
 			equip ice staff
 		
 		?foe = Bomb Cart &
