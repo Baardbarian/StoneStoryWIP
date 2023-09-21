@@ -68,9 +68,6 @@ var count_screen = 0
 	^foe ! Bomb Cart
   	equipL Poison wand dP
 	  equipR Fire wand dF
-	  :
-	    equipL Triskelion
-	    equipR aether shield A
 
 	:?item.GetCooldown("quarterstaff") <= 0 &
   ^foe.distance >= 5 &
@@ -112,34 +109,5 @@ var count_screen = 0
 	  equipL Triskelion
 	  equipR aether shield A
 
-
-
-?foe.count >= 2 & 
-^screen.i >= 1 & 
-^item.GetCooldown(＂blade＂) <= 0
-  screen.Next()
-:
-  screen.ResetOffset()
-?foe.distance <= 20
-  ?screen.i >= 1 & 
-  ^foe.count >= 6 & 
-  ^foe.distance < 25 & 
-  ^item.GetCooldown(＂blade＂) <= 0 | 
-  ^item.GetCooldown(＂blade＂) >= 2387
-    equip blade
-    ?item.CanActivate(＂blade＂)
-      activate R
-
-?summon.count = 0
-	equipL Fire Talisman
-	equipR Triskelion
-	?item.CanActivate("fire_talisman")
-		activate L
-:?pickup.distance <= 4
-  equipL Star Stone
-  equipR Triskelion
-:
-  equipL Triskelion
-  equipR Mask
 
 
