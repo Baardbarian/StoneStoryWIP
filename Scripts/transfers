@@ -61,38 +61,50 @@
   
   :?foe.count >= 6 &
   ^screen.i >= 1 &
+  ^item.GetCooldown(＂blade＂) <= 0
+    screen.Next()
+  :
+    screen.ResetOffset()
+
+  :?foe.distance <= 20
+    ?screen.i >= 1 & 
+    ^foe.count >= 9 & 
+    ^foe.distance < 25 & 
+    ^item.GetCooldown(＂blade＂) <= 0 | 
+    ^item.GetCooldown(＂blade＂) >= 2387
+      equip blade
+      ?item.CanActivate(＂blade＂)
+        activate R
+
+  :?item.GetCooldown(＂bash＂) <= 0 &
+  ^foe.distance < 16 &
+  ^foe.distance > 10 &
+  ^foe ! Bomb Cart
+    equip bash
   
-        screen.ResetOffset()
-
-  :?
-
-    :?item.GetCooldown(＂bash＂) <= 0 &
-    ^foe.distance > 10 &
-    ^foe ! Bomb Cart
-      equip bash
-
-
-    :?item.GetCooldown(＂dash＂) <= 0 &
-    ^foe.distance > 10 &
-    ^foe ! Bomb Cart
-      equip dash
-    
-    :?hp < 35 & foe ! Bomb Cart
-      ?foe.count <= 2 & foe ! Fire Element
-        equipL Vigor Sword +7
-        equipR vigor sword +5
-      :
-        equipL Vigor Hammer dh
-        equipR Vigor Shield ah
-    :?foe.armor > 0
+  
+  :?item.GetCooldown(＂dash＂) <= 0 &
+  ^foe.distance < 16 &
+  ^foe.distance > 10 &
+  ^foe ! Bomb Cart
+    equip dash
+  
+  :?hp < 35 & foe ! Bomb Cart
+    ?foe.count <= 2 & foe ! Fire Element
+      equipL Vigor Sword +7
+      equipR vigor sword +5
+    :
       equipL Vigor Hammer dh
       equipR Vigor Shield ah
-    :
-      equip ice staff
+  :?foe.armor > 0
+    equipL Vigor Hammer dh
+    equipR Vigor Shield ah
+  :
+    equip ice staff
     
-    ?foe = Bomb Cart &
-    ^foe.distance <= 6
-      equip Mind
+  ?foe = Bomb Cart &
+  ^foe.distance <= 6
+    equip Mind
   
   :?summon.count = 0
     equipL Fire Talisman
