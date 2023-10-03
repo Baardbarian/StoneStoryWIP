@@ -1,1 +1,109 @@
+>`1,6,Buffs:@buffs.string@
+>`1,7,Debuffs:@debuffs.string@
+
+
+// Status bottom screen
+>`1,18,distance:@foe.distance@
+>`1,19,state:@foe.state@
+>`1,20,time:@foe.time@
+>`1,21,armor:@foe.armor@
+>`1,22,name:@foe.name@
+>`1,23,foes:@foe.count@
+
+
+// vigor hammer+shield keeps you alive
+?loc = boiling
+  
+  // Bossfight
+  ?foe = Bronze Guardian
+    ?foe.state = 32 & foe.time = 32
+      equip Mind
+    :?foe.armor >= 1000 &
+    ^foe.distance <= 21 &
+    ^item.GetCooldown(＂hammer＂) <= 0 |
+    ^item.GetCooldown(＂hammer＂) >= 647
+      equip Heavy Hammer
+      ?item.CanActivate(＂hammer＂)
+        activate R
+    :?summon.count = 0
+      equipL Fire Talisman
+      equipR Vigor Shield
+      ?item.CanActivate(＂fire_talisman＂)
+        activate L
+    :?foe.state = 33
+      ?foe.distance > 20
+        equip quarterstaff 
+        activate quarterstaff
+      :
+        equipL Aether Wand *10
+        equipR Aether Wand *9
+    :
+      equipL Aether Wand *10
+      equipR Aether Wand *9
+    ?foe.debuffs.count >= 6 &
+    ^foe.armor <= 0
+      equipR mask
+      activate R 
+      activate cinderwisp
+    :
+      equipL Aether Wand *10
+      equipR Aether Wand *9
+  
+  // mookfights, change hp to your pref
+  :?item.GetCooldown(＂quarterstaff＂) <= 0 &
+  ^foe.distance >= 5 &
+  ^foe.distance ! 9999 &
+  ^summon.count ! 0
+    equip quarterstaff
+    ?item.CanActivate(＂quarterstaff＂)
+      activate R
+
+  
+  :?foe.count >= 6 &
+  ^screen.i >= 1 &
+  
+        screen.ResetOffset()
+
+  :?
+
+    :?item.GetCooldown(＂bash＂) <= 0 &
+    ^foe.distance > 10 &
+    ^foe ! Bomb Cart
+      equip bash
+
+
+    :?item.GetCooldown(＂dash＂) <= 0 &
+    ^foe.distance > 10 &
+    ^foe ! Bomb Cart
+      equip dash
+    
+    :?hp < 35 & foe ! Bomb Cart
+      ?foe.count <= 2 & foe ! Fire Element
+        equipL Vigor Sword +7
+        equipR vigor sword +5
+      :
+        equipL Vigor Hammer dh
+        equipR Vigor Shield ah
+    :?foe.armor > 0
+      equipL Vigor Hammer dh
+      equipR Vigor Shield ah
+    :
+      equip ice staff
+    
+    ?foe = Bomb Cart &
+    ^foe.distance <= 6
+      equip Mind
+  
+  :?summon.count = 0
+    equipL Fire Talisman
+    equipR Triskelion
+    ?item.CanActivate(＂fire_talisman＂)
+      activate L
+  :?pickup.distance <= 8
+    equipL Triskelion
+    equipR Star Stone
+  :
+    equipL Triskelion
+    equipR aether shield A
+
 
