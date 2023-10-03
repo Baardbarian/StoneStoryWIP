@@ -1,6 +1,6 @@
 >`1,6,Buffs:@buffs.string@
 >`1,7,Debuffs:@debuffs.string@
->`1,8,2screen:@screenclean@
+>`1,8,2screen:@count_screen@
 
 
 // Status bottom screen
@@ -11,104 +11,95 @@
 >`1,22,name:@foe.name@
 >`1,23,foes:@foe.count@
 
-var screenclean = 0
+var count_screen = 0
 
-// vigor hammer+shield keeps you alive
-?loc = boiling
-  
-  // Bossfight
-  ?foe = Bronze Guardian
-    ?foe.state = 32 & foe.time = 32
-      equip Mind
-    :?foe.armor >= 1000 &
-    ^foe.distance <= 21 &
-    ^item.GetCooldown(＂hammer＂) <= 0 |
-    ^item.GetCooldown(＂hammer＂) >= 647
-      equip Heavy Hammer
-      ?item.CanActivate(＂hammer＂)
-        activate R
-    :?summon.count = 0
-      equipL Fire Talisman
-      equipR Vigor Shield
-      ?item.CanActivate(＂fire_talisman＂)
-        activate L
-    :?foe.state = 33
-      ?foe.distance > 20
-        equip quarterstaff 
-        activate quarterstaff
-      :
-        equipL Aether Wand *10
-        equipR Aether Wand *9
-    :
-      equipL Aether Wand *10
-      equipR Aether Wand *9
-    ?foe.debuffs.count >= 6 &
-    ^foe.armor <= 0
-      equipR mask
-      activate R 
-      activate cinderwisp
-    :
-      equipL Aether Wand *10
-      equipR Aether Wand *9
-  
-  // mookfights, change hp to your pref
-  :?item.GetCooldown(＂quarterstaff＂) <= 0 &
-  ^foe.distance >= 5 &
-  ^foe.distance ! 9999 &
-  ^summon.count ! 0
-    equip quarterstaff
-    ?item.CanActivate(＂quarterstaff＂)
-      activate R
 
-  :?foe.distance <= 16
-		?foe.count >= 5 &
-  	^screen.i >= 1 &
-		^item.GetCooldown("blade") <= 0
-			screen.next()
-			for wait = 0..5
-				screenclean++
-			equip blade
-			?item.CanActivate("blade")
-				activate R
-				screen.ResetOffset()
+// Bossfight
+?foe = Bronze Guardian
+	?foe.state = 32 & foe.time = 32
+		equip Mind
+	:?foe.armor >= 1000 &
+	^foe.distance <= 21 &
+	^item.GetCooldown(＂hammer＂) <= 0 |
+	^item.GetCooldown(＂hammer＂) >= 647
+		equip Heavy Hammer
+		?item.CanActivate(＂hammer＂)
+			activate R
+	:?summon.count = 0
+		equipL Fire Talisman
+		equipR Vigor Shield
+		?item.CanActivate(＂fire_talisman＂)
+			activate L
+	:?foe.state = 33
+		?foe.distance > 20
+			equip quarterstaff 
+			activate quarterstaff
+		:
+			equipL Aether Wand *10
+			equipR Aether Wand *9
+	:
+		equipL Aether Wand *10
+		equipR Aether Wand *9
+	?foe.debuffs.count >= 6 &
+	^foe.armor <= 0
+		equipR mask
+		activate R 
+		activate cinderwisp
+	:
+		equipL Aether Wand *10
+		equipR Aether Wand *9
 
-	  :?item.GetCooldown("bash") <= 0 &
-	  ^foe.distance > 10 &
-	  ^foe ! Bomb Cart
-	    equip bash
-
-    :?item.GetCooldown("dash") <= 0 &
-	  ^foe.distance > 10 &
-	  ^foe ! Bomb Cart
-	    equip dash
-		
-		:?hp < 35 & foe ! Bomb Cart
-			?foe.count <= 2 & foe ! Fire Element
-				equipL Vigor Sword *7
-				equipR Vigor Sword *6
-			:
-				equipL Vigor Hammer dh
-				equipR Vigor Shield ah
-		:?foe.armor > 0
+// mookfights, change hp to your pref
+:?item.GetCooldown(＂quarterstaff＂) <= 0 &
+	^foe.distance >= 5 &
+	^foe.distance ! 9999 &
+	^summon.count ! 0
+		equip quarterstaff
+		?item.CanActivate(＂quarterstaff＂)
+			activate R
+:?foe.distance <= 16
+  ?item.GetCooldown("bash") <= 0 &
+  ^foe.distance > 10 &
+  ^foe ! Bomb Cart
+    equip bash
+  :?item.GetCooldown("dash") <= 0 &
+  ^foe.distance > 10 &
+  ^foe ! Bomb Cart
+    equip dash
+	:?hp < 50 & foe ! Bomb Cart
+		?foe.count <= 2 & foe ! Fire Element
+			equipL Vigor Sword *9
+			equipR Vigor Sword *10
+		:
 			equipL Vigor Hammer dh
 			equipR Vigor Shield ah
-		:
-			equip ice staff
-		
-		?foe = Bomb Cart &
-		^foe.distance <= 6
+	:?item.GetCooldown("blade") <= 0 &
+	^foe.count >= 5
+		screen.next()
+		count_screen++
+		?count_screen = 5
+			equip Blade
+			?item.CanActivate("blade")
+				activate R
+			screen.ResetOffset()
+			count_screen = 0
+	:?foe = Bomb Cart
+		equip bash
+		?foe.distance <= 7
 			equip Mind
-  
-  :?summon.count = 0
-    equipL Fire Talisman
-    equipR Triskelion
-    ?item.CanActivate(＂fire_talisman＂)
-      activate L
-  :?pickup.distance <= 8
-    equipL Triskelion
-    equipR Star Stone
-  :
-    equipL Triskelion
-    equipR aether shield A
+	:
+	equip Ice Staff dI
+
+:?summon.count = 0
+	equipL Fire Talisman
+	equipR Triskelion
+	?item.CanActivate(＂fire_talisman＂)
+		activate L
+:?pickup.distance <= 8
+	equipL Triskelion
+	equipR Star Stone
+:
+	equipL Triskelion
+	equipR aether shield A
 
 
