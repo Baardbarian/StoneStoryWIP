@@ -19,7 +19,6 @@ var count_screen = 0
 	?foe.state = 32 & foe.time = 32
 		equip Mind
 	:?foe.armor >= 1000 &
-	^foe.distance <= 21 &
 	^item.GetCooldown(＂hammer＂) <= 0 |
 	^item.GetCooldown(＂hammer＂) >= 647
 		equip Heavy Hammer
@@ -27,7 +26,7 @@ var count_screen = 0
 			activate R
 	:?summon.count = 0
 		equipL Fire Talisman
-		equipR Vigor Shield
+		equipR mask
 		?item.CanActivate(＂fire_talisman＂)
 			activate L
 	:?foe.state = 33
@@ -37,13 +36,8 @@ var count_screen = 0
 		:
 			equipL Aether Wand *10
 			equipR Aether Wand *9
-	:
-		equipL Aether Wand *10
-		equipR Aether Wand *9
 	?foe.debuffs.count >= 6 &
-	^foe.armor <= 0
-		equipR mask
-		activate R 
+	^foe.armor <= 0 
 		activate cinderwisp
 	:
 		equipL Aether Wand *10
