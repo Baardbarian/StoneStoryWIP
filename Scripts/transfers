@@ -16,84 +16,131 @@ var count_screen = 0
 
 // Bossfight
 ?foe = Bronze Guardian
-	?foe.state = 32 & foe.time = 32
-		equip Mind
-	:?foe.armor >= 1000 &
-	^item.GetCooldown(＂hammer＂) <= 0 |
-	^item.GetCooldown(＂hammer＂) >= 647
-		equip Heavy Hammer
-		?item.CanActivate(＂hammer＂)
-			activate R
-	:?summon.count = 0
-		equipL Fire Talisman
-		equipR mask
-		?item.CanActivate(＂fire_talisman＂)
-			activate L
-	:?foe.state = 33
-		?foe.distance > 20
-			equip quarterstaff 
-			activate quarterstaff
-		:
-			equipL Aether Wand *10
-			equipR Aether Wand *9
-	?foe.debuffs.count >= 6 &
-	^foe.armor <= 0 
-		activate cinderwisp
-	:
-		equipL Aether Wand *10
-		equipR Aether Wand *9
+  ?foe.state = 32 & foe.time = 32
+    equip Mind
+  :?foe.armor >= 1 &
+  ^item.GetCooldown(＂hammer＂) <= 0 |
+  ^item.GetCooldown(＂hammer＂) >= 647
+    equip Heavy Hammer
+    ?item.CanActivate(＂hammer＂)
+      activate R
+  :?foe.debuffs.string ! debuff_damage |
+  ^foe.debuffs.string ! debuff_dot
+    equipL fire wand
+    equipR Poison wand
+  :?foe.state = 33
+    ?foe.distance > 20
+      equip quarterstaff 
+      activate quarterstaff
+    :
+      equipL Aether Wand +7
+      equipR Aether Wand +6
+  :
+    equipL Aether Wand +7
+    equipR Aether Wand +6
+  
+  ?foe.debuffs.string = ＂ignition:10＂ &
+  ^foe.armor <= 0
+    activate cinderwisp
+
+:?foe = bolesh
+  ?foe.debuffs.string ! debuff_damage |
+  ^foe.debuffs.string ! debuff_dot
+    equipL fire wand
+    equipR Poison wand
+  :?foe.debuffs.string ! ＂chill:6＂
+    equip ice staff dI
+  :
+    equip repeating crossbow
+
+  ?foe.debuffs.string = ＂ignition:10＂
+    activate cinderwisp
+
+:?foe = ceiling
+  ?foe.debuffs.string ! debuff_damage |
+  ^foe.debuffs.string ! debuff_dot
+    equipL fire wand
+    equipR Poison wand
+  :?item.GetCooldown(＂bash＂) <= 0 &
+  ^foe.distance > 10
+    equipL grappling hook 
+    equipR bash
+  :?item.GetCooldown(＂bardiche＂) <= 0 |
+  ^item.GetCooldown(＂bardiche＂) >= 870
+    equip bardiche
+    ?item.CanActivate(＂bardiche＂)
+      activate R 
+  :?foe.distance < 7
+    equipL Mind Stone 
+    equipR compound shield 
+  :?foe.debuffs.string ! ＂chill:6＂
+    equip ice staff dI
+  :
+    equip repeating crossbow
+
+:?foe = Bomb Cart
+  equip bash
+  ?foe.distance <= 7
+    equip Mind
+
+
 
 // mookfights, change hp to your pref
 :?item.GetCooldown(＂quarterstaff＂) <= 0 &
-	^foe.distance >= 5 &
-	^foe.distance ! 9999 &
-	^summon.count ! 0
-		equip quarterstaff
-		?item.CanActivate(＂quarterstaff＂)
-			activate R
+^foe.distance >= 5 &
+^foe.distance ! 9999 &
+^summon.count ! 0
+   equip quarterstaff
+   ?item.CanActivate(＂quarterstaff＂)
+     activate R
 :?foe.distance <= 16
-  ?item.GetCooldown("bash") <= 0 &
+  ?item.GetCooldown(＂bash＂) <= 0 &
   ^foe.distance > 10 &
   ^foe ! Bomb Cart
     equip bash
-  :?item.GetCooldown("dash") <= 0 &
+  :?item.GetCooldown(＂dash＂) <= 0 &
   ^foe.distance > 10 &
   ^foe ! Bomb Cart
     equip dash
-	:?hp < 50 & foe ! Bomb Cart
-		?foe.count <= 2 & foe ! Fire Element
-			equipL Vigor Sword *9
-			equipR Vigor Sword *10
-		:
-			equipL Vigor Hammer dh
-			equipR Vigor Shield ah
-	:?item.GetCooldown("blade") <= 0 &
-	^foe.count >= 5
-		screen.next()
-		count_screen++
-		?count_screen = 5
-			equip Blade
-			?item.CanActivate("blade")
-				activate R
-			screen.ResetOffset()
-			count_screen = 0
-	:?foe = Bomb Cart
-		equip bash
-		?foe.distance <= 7
-			equip Mind
-	:
-	equip Ice Staff dI
+  :?hp < 50 & foe ! Bomb Cart
+    ?foe.count <= 2 & foe ! Fire Element
+      equipL Vigor Sword *9
+      equipR Vigor Sword *10
+    :
+      equipL Vigor Hammer dh
+      equipR Vigor Shield ah
+  :?item.GetCooldown(＂blade＂) <= 0 &
+  ^foe.count >= 4
+    screen.next()
+    count_screen++
+    ?count_screen = 6
+      equip Blade
+      ?item.CanActivate(＂blade＂)
+        activate R
+      screen.ResetOffset()
+      count_screen = 0 
+  :?foe.count = 1 &
+  ^foe.debuffs.string ! ＂chill:6＂
+    equipR Aether Sword +6
+    equipL grappling hook
+  :
+    equip Ice Staff dI
 
 :?summon.count = 0
-	equipL Fire Talisman
-	equipR Triskelion
-	?item.CanActivate(＂fire_talisman＂)
-		activate L
+  equipL Fire Talisman
+  equipR Triskelion
+  ?item.CanActivate(＂fire_talisman＂)
+    activate L
 :?pickup.distance <= 8
-	equipL Triskelion
-	equipR Star Stone
+  equipL Triskelion
+  equipR Star Stone
 :
-	equipL Triskelion
-	equipR aether shield A
+  equipL Triskelion
+  ?loc = boiling mine 
+    equipR aether shield A
+  :?loc = caves of fear
+    equipR ice shield A
+  :
+    equipR compound shield
 
 
