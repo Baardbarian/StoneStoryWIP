@@ -1,7 +1,8 @@
 >`1,6,Buffs:@buffs.string@
 >`1,7,Debuffs:@debuffs.string@
 >`1,8,2screen:@count_screen@
-
+>`1,9,aacR:@item.right.state@
+>`1,10,aacL:@item.left.state@
 
 // Status bottom screen
 >`1,18,distance:@foe.distance@
@@ -10,14 +11,98 @@
 >`1,21,armor:@foe.armor@
 >`1,22,name:@foe.name@
 >`1,23,foes:@foe.count@
+>`1,24,debuffs:@foe.debuffs.string@
 
 var count_screen = 0
 
+var state_flag = 0
+var state_count = 0
+var hammer_coolover = 0
+var hammer_count = 0
+
+?foe = dysangelos
+
+  ?item.GetCooldown(＂hammer＂) <= 0
+    hammer_coolover = 1
+
+  ?foe.state = 115
+    state_flag = 1
+  ?state_flag
+    state_count++
+
+  ?foe.distance <= 20
+    ?hp < 55 & foe ! phase2 &
+    ^state_count < 270
+      equipL Vigor Sword +7
+      equipR Vigor Sword +5
+    :?item.GetCooldown(＂mask＂) <= 0
+      equipR mask
+      ?item.CanActivate(＂mask＂)
+        activate R 
+    :?foe = phase1
+      ?foe.debuffs.string ! debuff_damage |
+      ^foe.debuffs.string ! debuff_dot 
+        equipR fire wand dF *10
+        equipL Poison wand dP *10
+      :?foe.debuffs.string ! ＂chill:6＂
+        equip ice staff
+      :
+        equip repeating crossbow
+    :?foe = phase2
+      ?hp < 20
+        equipL Vigor Sword *10
+        equipR Vigor Sword *9
+      :?foe = poison
+        equip Ice staff
+      :?foe = vigor
+        equipL Poison Wand +7
+        equipR Poison Wand +6
+      :?foe = aether
+        equipL Vigor Sword *10
+        equipR Vigor Sword *9
+      :?foe = fire
+        equipL Aether wand +7
+        equipR Aether Wand +6
+      :?foe = ice
+        equipL Fire sword +7
+        equipR Fire sword +6
+      :
+        equip repeating crossbow 
+    :?foe = phase3
+      ?foe.state = 115 & foe.time = 60
+        equip Mind
+      :?foe.debuffs.string ! debuff_damage |
+      ^foe.debuffs.string ! debuff_dot 
+        equipR fire wand dF *10
+        equipL Poison wand dP *10
+      :?foe.debuffs.string ! ＂chill:6＂
+        equip ice staff
+      :?foe.armor > 1 & 
+      ^item.GetCooldown(＂hammer＂) <= 0 |
+      ^item.GetCooldown(＂hammer＂) >= 647
+        equip Heavy Hammer
+        ?item.CanActivate(＂hammer＂)
+          activate R
+        hammer_count++
+        ?hammer_count = 18
+          hammer_count = 0
+          hammer_coolover = 0
+          state_flag = 0
+          state_count = 0
+      :
+        equip repeating crossbow 
+  :
+    equipR compound shield 
+    equipL Triskelion 
 
 // Bossfight
-?foe = Bronze Guardian
+:?foe = Bronze Guardian
   ?foe.state = 32 & foe.time = 32
     equip Mind
+  :?item.GetCooldown(＂mask＂) <= 0
+      equipR mask
+      ?item.CanActivate(＂mask＂)
+        activate R 
   :?foe.armor >= 1 &
   ^item.GetCooldown(＂hammer＂) <= 0 |
   ^item.GetCooldown(＂hammer＂) >= 647
@@ -44,7 +129,12 @@ var count_screen = 0
     activate cinderwisp
 
 :?foe = bolesh
-  ?foe.debuffs.string ! debuff_damage |
+  ?foe.state = 133 &
+  ^item.GetCooldown(＂mask＂) <= 0
+      equipR mask
+      ?item.CanActivate(＂mask＂)
+        activate R 
+  :?foe.debuffs.string ! debuff_damage |
   ^foe.debuffs.string ! debuff_dot
     equipL fire wand
     equipR Poison wand
@@ -70,11 +160,18 @@ var count_screen = 0
     equip bardiche
     ?item.CanActivate(＂bardiche＂)
       activate R 
-  :?foe.distance < 7
+  :?foe.state = 33 &
+  ^foe.time > 5 &
+  ^foe.distance < 7
     equipL Mind Stone 
     equipR compound shield 
   :?foe.debuffs.string ! ＂chill:6＂
     equip ice staff dI
+  :?foe.state = 33 &
+  ^foe.time < 5 &
+  ^foe.distance > 10
+    equipL grappling hook 
+    equipR dash
   :
     equip repeating crossbow
 
@@ -82,6 +179,29 @@ var count_screen = 0
   equip bash
   ?foe.distance <= 7
     equip Mind
+
+:?foe = boss &
+^loc = mushroom forest 
+  ?foe.armor >= 1 &
+  ^item.GetCooldown(＂hammer＂) <= 0 |
+  ^item.GetCooldown(＂hammer＂) >= 647
+    equip Heavy Hammer
+    ?item.CanActivate(＂hammer＂)
+      activate R
+  :?item.GetCooldown(＂mask＂) <= 0
+      equipR mask
+      ?item.CanActivate(＂mask＂)
+        activate R 
+  :?foe.debuffs.string ! debuff_damage |
+  ^foe.debuffs.string ! debuff_dot
+    equipL fire wand
+    equipR Poison wand
+  :
+    equip ice staff dI
+  
+  ?foe.debuffs.string = ＂ignition:10＂
+    activate cinderwisp
+
 
 
 
@@ -96,11 +216,13 @@ var count_screen = 0
 :?foe.distance <= 16
   ?item.GetCooldown(＂bash＂) <= 0 &
   ^foe.distance > 10 &
-  ^foe ! Bomb Cart
+  ^foe ! Bomb Cart &
+  ^foe ! Poison 
     equip bash
   :?item.GetCooldown(＂dash＂) <= 0 &
   ^foe.distance > 10 &
-  ^foe ! Bomb Cart
+  ^foe ! Bomb Cart &
+  ^foe ! Poison
     equip dash
   :?hp < 50 & foe ! Bomb Cart
     ?foe.count <= 2 & foe ! Fire Element
@@ -113,16 +235,21 @@ var count_screen = 0
   ^foe.count >= 4
     screen.next()
     count_screen++
-    ?count_screen = 6
+    ?count_screen = 7
       equip Blade
       ?item.CanActivate(＂blade＂)
         activate R
       screen.ResetOffset()
       count_screen = 0 
+  :?foe = ice pillar
+    equipR Aether Sword dU +6
+    equipL Aether sword dU +5
   :?foe.count = 1 &
-  ^foe.debuffs.string ! ＂chill:6＂
+  ^foe.debuffs.string = ＂chill＂
     equipR Aether Sword +6
     equipL grappling hook
+    ?foe = immune_to_physical
+      equipR Poison wand dP
   :
     equip Ice Staff dI
 
@@ -136,11 +263,19 @@ var count_screen = 0
   equipR Star Stone
 :
   equipL Triskelion
-  ?loc = boiling mine 
-    equipR aether shield A
-  :?loc = caves of fear
-    equipR ice shield A
-  :
-    equipR compound shield
+  equipR mask
+  ?foe.distance < 38
+    ?loc = boiling mine 
+      equipR aether shield A
+    :?loc = caves of fear
+      equipR ice shield A
+    :?loc = haunted halls
+      equipR Vigor Shield A
+    :?loc = mushroom forest
+      equipR Poison shield A
+    :?loc = icy ridge 
+      equipR fire shield A
+    :
+      equipR compound shield
 
 
