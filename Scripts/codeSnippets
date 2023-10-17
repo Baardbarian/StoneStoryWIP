@@ -25,3 +25,23 @@
 :
   equipL Triskelion
   equipR Mask
+
+
+on that note, yesterday i found out an easier way to check foe debuffs
+should be better for performance too, but it's a little less good at keeping chill applied. but shouldnt be that noticeable
+func DebuffApplier()
+  ?foe.debuffs.string = ＂∞:debuff_damage:1:＂| foe = immune_to_debuff_damage
+    ?foe.debuffs.string = ＂φ:debuff_dot:1:＂| foe = immune_to_debuff_dot
+      ?foe.debuffs.string = ＂❄:debuff_chill:6:＂| foe = immune_to_debuff_chill
+        loadout 1
+      :
+        equipL ice di
+        equipR mask
+    :
+      equipL fire df
+      equipR mask
+  :
+    equipL poison dp
+    equipR mask
+
+//Replace loadout 1 with your dps weapons of choice
