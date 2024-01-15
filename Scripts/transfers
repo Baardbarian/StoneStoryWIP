@@ -6,6 +6,7 @@
 >`1,11,time:@totaltime@
 
 // Status bottom screen
+>`1,17,damage:@foe.damage@
 >`1,18,distance:@foe.distance@
 >`1,19,state:@foe.state@
 >`1,20,time:@foe.time@
@@ -13,6 +14,14 @@
 >`1,22,name:@foe.name@
 >`1,23,foes:@foe.count@
 >`1,24,debuffs:@foe.debuffs.string@
+>`1,25,buffs:@foe.buffs.string@
+
+
+import Cosmetics/SleepyStonehead
+
+//import Cosmetics/PetSnowBunny
+import Cosmetics/PetSnowman
+import CozyCave
 
 var count_screen = 0
 
@@ -22,10 +31,12 @@ var hammer_coolover = 0
 var hammer_count = 0
 
 //aac try
-?item.left.state = 3
+?item.left.state = 3 &
+^loc.stars ! 3
   equipL wand *0 //junk
   equipL @item.left@
-?item.right.state = 3
+?item.right.state = 3 &
+^loc.stars ! 3
   equipR shield *0 //junk
   equip @item.right@
 
@@ -37,60 +48,69 @@ var hammer_count = 0
     state_count++
 
   ?foe.distance <= 20
-    ?hp < 55 & foe ! phase2 &
+    ?foe.damage = 1 &
+    ^item.GetCooldown(＂hammer＂) <= 0 |
+    ^(item.right = Heavy Hammer &
+    ^item.right.state = 2)
+      equip Heavy Hammer +11
+      ?item.CanActivate(＂hammer＂)
+        activate R
+    :?hp < 30 & foe ! phase2 &
     ^state_count < 270
-      equipL Vigor Sword +7
-      equipR Vigor Sword +5
-    :?item.GetCooldown(＂mask＂) <= 0
-      equipR mask
-      ?item.CanActivate(＂mask＂)
-        activate R 
+      equipL Vigor Sword *10 dL
+      equipR Vigor Sword *9 dL
     :?foe = phase1
-      ?foe.debuffs.string ! debuff_damage |
-      ^foe.debuffs.string ! debuff_dot 
-        equipR fire wand dF *10
-        equipL Poison wand dP *10
+      ?foe.debuffs.string ! debuff_damage
+        equipR mask
+        equipL Poison wand dP
       :?foe.debuffs.string ! ＂chill:6＂
         equip ice staff
       :
-        equip repeating crossbow
+        equipR fire sword +11 D
+        equipL fire sword +10 D
     :?foe = phase2
       ?hp < 20
-        equipL Vigor Sword *10
-        equipR Vigor Sword *9
+        equipL Vigor Sword *10 dL
+        equipR Vigor Sword *9 dL
       :?foe = poison
-        equip Ice staff
+        equipR Ice sword +11 D
+        equipL ice sword +10 D
       :?foe = vigor
-        equipL Poison Wand +7
-        equipR Poison Wand +6
+        equipL Poison Sword +11 D
+        equipR Poison Sword +10 D
       :?foe = aether
-        equipL Vigor Sword *10
-        equipR Vigor Sword *9
+        equipL Vigor Sword +11 D
+        equipR Vigor Sword +10 D
       :?foe = fire
-        equipL Aether wand +7
-        equipR Aether Wand +6
+        equipL Aether sword +11 D
+        equipR Aether sword +10 D
       :?foe = ice
-        equipL Fire sword +7
-        equipR Fire sword +6
+        equipL Fire sword +11 D
+        equipR Fire sword +10 D
       :
         equip repeating crossbow 
     :?foe = phase3
       ?foe.state = 115 & foe.time = 60
         equip Mind
-      :?foe.debuffs.string ! debuff_damage |
-      ^foe.debuffs.string ! debuff_dot 
-        equipR fire wand dF *10
-        equipL Poison wand dP *10
-      :?foe.debuffs.string ! ＂chill:6＂
-        equip ice staff
-      :?foe.armor > 1 & 
+      :?foe.damage = 1 &
       ^item.GetCooldown(＂hammer＂) <= 0 |
-      ^item.GetCooldown(＂hammer＂) >= 647
-        equip Heavy Hammer
+      ^(item.right = Heavy Hammer &
+      ^item.right.state = 2)
+        equip Heavy Hammer +11
         ?item.CanActivate(＂hammer＂)
           activate R
+      :?foe.debuffs.string ! debuff_damage
+        equipR mask
+        equipL Poison wand dP
+      :?foe.debuffs.string ! ＂chill:6＂
+        equip ice staff
+      :?foe.buffs.string = 
+      ^＂adaptive_defense_fire＂
+        equipL Aether sword +11 D
+        equipR Aether sword +10 D
       :
-        equip repeating crossbow 
+        equipR fire sword +11 D
+        equipL fire sword +10 D
   :
     equipR compound shield 
     equipL Triskelion 
@@ -125,22 +145,18 @@ var hammer_count = 0
         activate R
     :?foe.armor > 1
       equipR hammer ah
-      equipL hammer
+      equipL aether hammer
     :
-      equip repeating crossbow 
+      equip aether crossbow 
   :
-    equip repeating crossbow
+    equip aether crossbow
   
   ?foe.debuffs.string = ＂ignition:10＂ &
   ^foe.armor <= 0
     activate cinderwisp
 
-?foe = skinless
-  ?foe.state = 32 &
-  ^foe.time = 75
-    equipR Vigor Shield A
-    equipL Mind Stone 
-  :?foe.debuffs.string ! debuff_damage
+:?foe = skinless
+  ?foe.debuffs.string ! debuff_damage
     equipR mask
     equipL Poison wand 
   :?foe.debuffs.string ! debuff_dot
@@ -149,7 +165,8 @@ var hammer_count = 0
   :?foe.debuffs.string ! ＂chill:6＂
     equip ice staff dI
   :
-    equip repeating crossbow 
+    equipR vigor sword D +11
+    equipL Vigor Sword D +10 
 
 :?foe = legless
   ?foe.state = 32 &
@@ -175,7 +192,8 @@ var hammer_count = 0
     ?item.CanActivate(＂bardiche＂)
       activate R
   :
-    equip repeating crossbow 
+    equipR vigor sword D +11
+    equipL Vigor Sword D +10 
 
   ?foe.debuffs.string = ＂ignition:10＂
     activate cinderwisp
@@ -202,14 +220,18 @@ var hammer_count = 0
     ?item.CanActivate(＂bardiche＂)
       activate R
   :
-    equip repeating crossbow 
+    equipR vigor sword D +11
+    equipL Vigor Sword D +10
 
 
 :?foe = bolesh
-  ?foe.debuffs.string ! ＂chill:6＂
+  ?foe.distance > 22
+    equipL Triskelion 
+    equipR mask
+  :?foe.debuffs.string ! ＂chill:6＂
     equip ice staff dI
   :
-    equip repeating crossbow 
+    equip ice crossbow 
 
   ?foe.debuffs.string = ＂ignition:10＂ 
   ^|foe.hp < 800
@@ -218,9 +240,9 @@ var hammer_count = 0
 
 :?foe = ceiling
   ?foe.debuffs.string ! debuff_damage |
-  ^foe.debuffs.string ! debuff_dot
-    equipL fire wand
-    equipR Poison wand
+  ^foe.debuffs.string ! debuff_dot 
+    equipR Poison wand dP 
+    equipL fire wand dF
   :?item.GetCooldown(＂bash＂) <= 0 &
   ^foe.distance > 10
     equipL grappling hook 
@@ -242,8 +264,11 @@ var hammer_count = 0
   ^foe.distance > 10
     equipL grappling hook 
     equipR dash
+  :?foe.distance < 10
+    equipR ice sword +11
+    equipL ice sword +10
   :
-    equip repeating crossbow
+    equip ice crossbow
 
 :?foe = Bomb Cart
   equip bash
@@ -271,7 +296,8 @@ var hammer_count = 0
     ?item.CanActivate(＂mask＂)
       activate R
   :?foe.distance < 10 &
-  ^foe.state > 2
+  ^foe.state > 2 &
+  ^foe ! enoki
     equipR Poison wand 
     equipL mind stone
   :?foe.distance > 20 &
@@ -280,8 +306,8 @@ var hammer_count = 0
     activate quarterstaff
   :?foe.distance > 10 &
   ^foe = enoki
-    equipR bash
-    equipL grappling
+    equipR bash 
+    equipL Poison Sword 
   :?foe.debuffs.string ! debuff_damage
     equipR mask
     equipL Poison wand 
@@ -291,7 +317,8 @@ var hammer_count = 0
   :?foe.debuffs.string ! ＂chill:6＂
     equip ice staff dI
   :
-    equip repeating crossbow 
+    equipR Poison sword +11 D
+    equipL Poison Sword +10 D
   
   ?foe.debuffs.string = ＂ignition:10＂
     activate cinderwisp
@@ -330,8 +357,11 @@ var hammer_count = 0
   ^foe.state = 3
     equipR Vigor Shield 
     equipL fire_talisman 
+  :?foe.distance < 10
+    equipR fire sword +9
+    equipL fire sword +8
   :
-    equip repeating crossbow 
+    equip fire crossbow 
 
     
 
@@ -354,11 +384,19 @@ var hammer_count = 0
   :?foe.debuffs.string ! ＂chill:6＂
     equip ice staff dI
   :
-    equip repeating crossbow
+    equip fire crossbow
+
+  ?foe.debuffs.string = ＂ignition:10＂
+    activate cinderwisp
+
 
 :?foe = boss &
 ^loc = temple
-  ?foe.debuffs.string ! debuff_damage
+  ?foe.state = 112 &
+  ^foe.time > 50 &
+  ^foe.time < 75
+    equipR mind stone
+  :?foe.debuffs.string ! debuff_damage
     equipR mask
     equipL Poison wand 
   :?foe.debuffs.string ! debuff_dot
@@ -367,14 +405,28 @@ var hammer_count = 0
   :?foe.debuffs.string ! ＂chill:6＂
     equip ice staff dI
   :
-    equip repeating crossbow 
+    equipR ice sword +11 D
+    equipL ice sword +10 D
   
   ?foe.debuffs.string = ＂ignition:10＂
     activate cinderwisp
 
 :?foe = boss &
 ^loc = canyon 
-  equip repeating crossbow 
+  ?foe.distance > 25
+    equipR compound 
+    equipL star
+  :?foe = leuce &
+  ^foe.state = 33
+    equipR compound 
+    equipL mind
+  :?foe = mistress &
+  ^foe.state = 32 &
+  ^foe.time > 30
+    equipR compound 
+    equipL mind
+  :
+    equip repeating cross
   
   ?foe.debuffs.string = ＂ignition:10＂
     activate cinderwisp
@@ -401,6 +453,8 @@ var hammer_count = 0
   ^foe ! Bomb Cart &
   ^foe ! Poison
     equip dash
+//  :?foe.debuffs.string ! debuff_dot 
+//    equip fire staff dF
   :?hp < 50 & foe ! Bomb Cart
     ?foe.count <= 2 & 
     ^foe ! Fire Element &
@@ -430,7 +484,7 @@ var hammer_count = 0
       count_screen = 0 
   :?foe = ice pillar
     equipR Aether Sword dU big
-    equipL Aether sword dU +7
+    equipL Aether sword dU +10
   :?foe.count = 1 &
   ^foe.debuffs.string = ＂chill:6＂
     equipR Aether Sword dU +7
@@ -465,4 +519,4 @@ var hammer_count = 0
     :
       equipR compound shield
 
-
+.
