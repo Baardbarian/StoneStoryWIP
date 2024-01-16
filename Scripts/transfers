@@ -17,11 +17,14 @@
 >`1,25,buffs:@foe.buffs.string@
 
 
-import Cosmetics/SleepyStonehead
+//import Cosmetics/Hats/SleepyStonehead 
+import Cosmetics/Hats/Skully
+
 
 //import Cosmetics/PetSnowBunny
 //import Cosmetics/PetSnowman
-import Cosmetics/PetSkully
+//import Cosmetics/PetSkully
+import Cosmetics/PetCranius
 import CozyCave
 
 var count_screen = 0
@@ -531,3 +534,10 @@ var hammer_count = 0
       equipR fire shield A
     :
       equipR compound shield
+
+?loc = caves & loc.stars = 3
+  equipL grappling
+//  ?item.GetCooldown(＂skeleton_arm＂) <= 0
+//    equip skeleton 
+//    ?item.CanActivate(＂skeleton_arm＂)
+//      activate R 
