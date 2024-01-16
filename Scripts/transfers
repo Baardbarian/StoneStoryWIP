@@ -20,7 +20,8 @@
 import Cosmetics/SleepyStonehead
 
 //import Cosmetics/PetSnowBunny
-import Cosmetics/PetSnowman
+//import Cosmetics/PetSnowman
+import Cosmetics/PetSkully
 import CozyCave
 
 var count_screen = 0
@@ -156,6 +157,9 @@ var hammer_count = 0
     activate cinderwisp
 
 :?foe = skinless
+  ?foe.hp > 6100
+    equipR dashing 
+    equipL grappling 
   ?foe.debuffs.string ! debuff_damage
     equipR mask
     equipL Poison wand 
@@ -164,6 +168,9 @@ var hammer_count = 0
     equipR mask
   :?foe.debuffs.string ! ＂chill:6＂
     equip ice staff dI
+  :?foe.distance > 10
+    equipR dashing 
+    equipL grappling 
   :
     equipR vigor sword D +11
     equipL Vigor Sword D +10 
@@ -173,8 +180,7 @@ var hammer_count = 0
   ^foe.time = 50
     equipR Vigor Shield A
     equipL Mind Stone 
-  :?foe.state = 33 &
-  ^foe.time > 25
+  :?foe.state = 33
     equipR Vigor Shield A
     equipL vigor hammer ah
   :?foe.debuffs.string ! debuff_damage
@@ -183,14 +189,21 @@ var hammer_count = 0
   :?foe.debuffs.string ! debuff_dot
     equipL fire wand
     equipR mask
-  :?foe.debuffs.string ! ＂chill:6＂
+  :?foe.debuffs.string ! ＂chill:6＂ |
+  ^foe.count > 1
     equip ice staff dI
+  :?foe.distance > 10
+    equipR dashing 
+    equipL grappling 
   :?foe.distance < 10 &
   ^item.GetCooldown(＂bardiche＂) <= 0 |
   ^item.GetCooldown(＂bardiche＂) >= 870
     equip bardiche
     ?item.CanActivate(＂bardiche＂)
       activate R
+  :?hp < maxhp
+    equipR Vigor sword dL
+    equipL Vigor Sword D
   :
     equipR vigor sword D +11
     equipL Vigor Sword D +10 
@@ -518,5 +531,3 @@ var hammer_count = 0
       equipR fire shield A
     :
       equipR compound shield
-
-.
