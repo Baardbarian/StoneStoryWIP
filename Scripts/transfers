@@ -5,16 +5,20 @@
 >`1,10,aacL:@item.left.state@
 >`1,11,time:@totaltime@
 
+var foeA = foe
+var foeB = string.Break(foeA,25)
+
 // Status bottom screen
->`1,17,damage:@foe.damage@
->`1,18,distance:@foe.distance@
->`1,19,state:@foe.state@
->`1,20,time:@foe.time@
->`1,21,armor:@foe.armor@
->`1,22,name:@foe.name@
->`1,23,foes:@foe.count@
->`1,24,debuffs:@foe.debuffs.string@
->`1,25,buffs:@foe.buffs.string@
+>`1,16,damage:@foe.damage@
+>`1,17,distance:@foe.distance@
+>`1,18,state:@foe.state@
+>`1,19,time:@foe.time@
+>`1,20,armor:@foe.armor@
+>`1,21,foes:@foe.count@
+>`1,22,debuffs:@foe.debuffs.string@
+>`1,23,buffs:@foe.buffs.string@
+>`1,24,foe:@foe@
+>`1,25,+++:@foe@
 
 
 //import Cosmetics/Hats/SleepyStonehead 
